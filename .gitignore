@@ -1,0 +1,4 @@
+node_modules/
+setup.txt
+/dist
+.env
