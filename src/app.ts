@@ -33,6 +33,11 @@ await app.register(fastifySwagger, {
   transform: jsonSchemaTransform,
 });
 
+await app.register(fastifyCors, {
+  origin: ["http://localhost:3000"],
+  credentials: true,
+});
+
 await app.register(fastifyApiReference, {
   routePrefix: "/docs",
   configuration: {
@@ -40,15 +45,15 @@ await app.register(fastifyApiReference, {
       {
         title: "API gerenciadora de treinos",
         slug: "api-gerenciadora-de-treinos",
-        url: "http://localhost:3333/swagger.json",
+        url: "/swagger.json",
+      },
+      {
+        title: "Auth API",
+        slug: "auth-api",
+        url: "/api/auth/open-api/generate-schema",
       },
     ],
   },
-});
-
-await app.register(fastifyCors, {
-  origin: "http://localhost:3000",
-  credentials: true,
 });
 
 app.withTypeProvider<ZodTypeProvider>().route({
