@@ -4,6 +4,7 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.enum(["dev", "test", "prod"]).default("dev"),
   PORT: z.coerce.number().default(3333),
+  DATABASE_URL: z.string(),
 });
 
 export const _env = envSchema.safeParse(process.env); // tenta validar para ver se tem as informações acima
