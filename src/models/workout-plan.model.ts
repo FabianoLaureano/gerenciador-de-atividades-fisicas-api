@@ -1,4 +1,3 @@
-// src/models/workout-plan.model.ts
 import { z } from "zod";
 import { WorkoutDay } from "./workout-day.model.js";
 

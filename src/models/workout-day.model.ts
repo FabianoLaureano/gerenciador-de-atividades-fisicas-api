@@ -1,6 +1,6 @@
-// src/models/workout-day.model.ts
 import { z } from "zod";
 import { WorkoutExercise } from "./workout-exercise.model.js";
+import { BadRequestError } from "../errors/bad-request-error.js";
 
 export const WeekDaySchema = z.enum([
   "SUNDAY",
@@ -38,7 +38,7 @@ export class WorkoutDay {
 
   static create(data: Omit<WorkoutDayProps, "id">): WorkoutDay {
     if (data.isRest && data.exercises.length > 0) {
-      throw new Error("A rest day cannot have exercises");
+      throw new BadRequestError("A rest day cannot have exercises");
     }
 
     return new WorkoutDay({

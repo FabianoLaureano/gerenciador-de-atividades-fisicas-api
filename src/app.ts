@@ -10,6 +10,7 @@ import fastifySwagger from "@fastify/swagger";
 import fastifyApiReference from "@scalar/fastify-api-reference";
 import { auth } from "./lib/auth.js";
 import fastifyCors from "@fastify/cors";
+import { errorHandler } from "./lib/error-handler.js";
 
 const app = Fastify({ logger: true });
 
@@ -121,5 +122,7 @@ app.route({
     }
   },
 });
+
+app.register(errorHandler);
 
 export { app };
