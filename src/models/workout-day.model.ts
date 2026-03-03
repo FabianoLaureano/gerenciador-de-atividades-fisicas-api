@@ -12,6 +12,8 @@ export const WeekDaySchema = z.enum([
   "SATURDAY",
 ]);
 
+export type WeekDay = z.infer<typeof WeekDaySchema>;
+
 const workoutDayPropsSchema = z.object({
   id: z.uuid(),
   name: z.string().trim().min(1),

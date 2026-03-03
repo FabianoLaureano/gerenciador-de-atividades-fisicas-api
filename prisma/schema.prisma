@@ -61,12 +61,13 @@ model WorkoutDay {
   workoutPlanId String
   workoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id])
 
-  isRest    Boolean  @default(false)
-  weekDay   WeekDay
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isRest                     Boolean  @default(false)
+  weekDay                    WeekDay
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt
+  estimatedDurationInSeconds Int
 
-  workoutExercises WorkoutExercise[]
+  exercises WorkoutExercise[]
 }
 
 model WorkoutExercise {

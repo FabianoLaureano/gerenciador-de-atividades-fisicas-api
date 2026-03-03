@@ -4,7 +4,7 @@ import { WorkoutDay } from "./workout-day.model.js";
 const workoutPlanPropsSchema = z.object({
   id: z.uuid(),
   name: z.string().trim().min(1),
-  userId: z.uuid(),
+  userId: z.string(),
   isActive: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
@@ -62,5 +62,10 @@ export class WorkoutPlan {
   }
   get workoutDays() {
     return this.data.workoutDays;
+  }
+
+  deactivate(): void {
+    this.data.isActive = false;
+    this.data.updatedAt = new Date();
   }
 }

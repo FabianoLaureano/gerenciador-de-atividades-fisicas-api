@@ -11,6 +11,7 @@ import fastifyApiReference from "@scalar/fastify-api-reference";
 import { auth } from "./lib/auth.js";
 import fastifyCors from "@fastify/cors";
 import { errorHandler } from "./lib/error-handler.js";
+import { workoutPlanRoutes } from "./routes/workout-plans.routes.js";
 
 const app = Fastify({ logger: true });
 
@@ -56,6 +57,8 @@ await app.register(fastifyApiReference, {
     ],
   },
 });
+
+await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
