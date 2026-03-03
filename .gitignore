@@ -4,3 +4,5 @@ setup.txt
 .env
 
 /src/generated/prisma
+
+coverage/
