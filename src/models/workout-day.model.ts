@@ -20,7 +20,7 @@ const workoutDayPropsSchema = z.object({
   weekDay: z.enum(WeekDaySchema.options),
   isRest: z.boolean().default(false),
   estimatedDurationInSeconds: z.number().int().min(1),
-  coverImageUrl: z.url().optional(),
+  coverImageUrl: z.string().nullable().optional(),
 });
 
 type WorkoutDayProps = z.infer<typeof workoutDayPropsSchema> & {

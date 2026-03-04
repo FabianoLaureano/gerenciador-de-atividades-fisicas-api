@@ -12,7 +12,7 @@ interface InputDto {
     weekDay: WeekDay;
     isRest: boolean;
     estimatedDurationInSeconds: number;
-    coverImageUrl?: string;
+    coverImageUrl?: string | null | undefined;
     exercises: Array<{
       order: number;
       name: string;
@@ -33,7 +33,7 @@ interface OutputDto {
     weekDay: WeekDay;
     isRest: boolean;
     estimatedDurationInSeconds: number;
-    coverImageUrl?: string;
+    coverImageUrl?: string | null | undefined;
     exercises: Array<{
       id: string;
       order: number;
