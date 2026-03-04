@@ -11,9 +11,16 @@ import {
   startWorkoutSessionResponseSchema,
 } from "../schemas/start-workout-session.schema.js";
 import { StartWorkoutSessionController } from "../controllers/start-workout-session.controller.js";
+import {
+  updateWorkoutSessionParamsSchema,
+  updateWorkoutSessionBodySchema,
+  updateWorkoutSessionResponseSchema,
+} from "../schemas/update-workout-session.schema.js";
+import { UpdateWorkoutSessionController } from "../controllers/update-workout-session.controller.js";
 
 const workoutPlanController = new WorkoutPlanController();
 const startWorkoutSessionController = new StartWorkoutSessionController();
+const updateWorkoutSessionController = new UpdateWorkoutSessionController();
 
 export const workoutPlanRoutes = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().route({
@@ -54,6 +61,27 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
     },
     handler: startWorkoutSessionController.handle.bind(
       startWorkoutSessionController,
+    ),
+  });
+
+  app.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/:workoutPlanId/days/:workoutDayId/sessions/:sessionId",
+    schema: {
+      operationId: "updateWorkoutSession",
+      tags: ["Workout Plan"],
+      summary: "Update a workout session",
+      params: updateWorkoutSessionParamsSchema,
+      body: updateWorkoutSessionBodySchema,
+      response: {
+        200: updateWorkoutSessionResponseSchema,
+        401: ErrorSchema,
+        404: ErrorSchema,
+        500: ErrorSchema,
+      },
+    },
+    handler: updateWorkoutSessionController.handle.bind(
+      updateWorkoutSessionController,
     ),
   });
 };

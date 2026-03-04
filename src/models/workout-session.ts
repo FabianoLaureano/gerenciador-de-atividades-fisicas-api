@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { WorkoutSessionAlreadyFinishError } from "../errors/workout-session-already-finish-error.js";
 
 const workoutSessionPropsSchema = z.object({
   id: z.uuid(),
@@ -56,5 +57,15 @@ export class WorkoutSession {
 
   get updatedAt() {
     return this.data.updatedAt;
+  }
+
+  finish(): void {
+    if (this.data.completedAt) {
+      throw new WorkoutSessionAlreadyFinishError(
+        "Workout session is already finished",
+      );
+    }
+    this.data.completedAt = new Date();
+    this.data.updatedAt = new Date();
   }
 }
