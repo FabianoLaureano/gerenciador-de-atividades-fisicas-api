@@ -1,9 +1,11 @@
+import { z } from "zod";
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { WorkoutPlanController } from "../controllers/workout-plan.controller.js";
 import {
   createWorkoutPlanBodySchema,
   createWorkoutPlanResponseSchema,
+  GetWorkoutPlanResponseSchema,
 } from "../schemas/workout-plan.schema.js";
 import { ErrorSchema } from "../schemas/error-schema.js";
 import {
@@ -17,10 +19,13 @@ import {
   updateWorkoutSessionResponseSchema,
 } from "../schemas/update-workout-session.schema.js";
 import { UpdateWorkoutSessionController } from "../controllers/update-workout-session.controller.js";
+import { GetWorkoutPlanController } from "../controllers/get-workout-plan.controller.js";
+import { getWorkoutPlanParamsSchema } from "../schemas/workout-plan.schema.js";
 
 const workoutPlanController = new WorkoutPlanController();
 const startWorkoutSessionController = new StartWorkoutSessionController();
 const updateWorkoutSessionController = new UpdateWorkoutSessionController();
+const getWorkoutPlanController = new GetWorkoutPlanController();
 
 export const workoutPlanRoutes = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().route({
@@ -83,5 +88,25 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
     handler: updateWorkoutSessionController.handle.bind(
       updateWorkoutSessionController,
     ),
+  });
+
+  app.withTypeProvider<ZodTypeProvider>().route({
+    method: "GET",
+    url: "/:workoutPlanId",
+    schema: {
+      operationId: "getWorkoutPlan",
+      tags: ["Workout Plan"],
+      summary: "Get a workout plan",
+      params: getWorkoutPlanParamsSchema,
+      response: {
+        200: z.object({
+          plan: GetWorkoutPlanResponseSchema,
+        }),
+        401: ErrorSchema,
+        404: ErrorSchema,
+        500: ErrorSchema,
+      },
+    },
+    handler: getWorkoutPlanController.handle.bind(getWorkoutPlanController),
   });
 };

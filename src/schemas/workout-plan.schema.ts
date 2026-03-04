@@ -50,4 +50,28 @@ export const createWorkoutPlanResponseSchema = z.object({
   ),
 });
 
+export const getWorkoutPlanParamsSchema = z.object({
+  workoutPlanId: z.uuid(),
+});
+
+export const GetWorkoutPlanResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  workoutDays: z.array(
+    z.object({
+      id: z.uuid(),
+      weekDay: z.enum(WeekDaySchema.options),
+      name: z.string(),
+      isRest: z.boolean(),
+      coverImageUrl: z.string().nullable().optional(),
+      estimatedDurationInSeconds: z.number(),
+      exercisesCount: z.number(),
+    }),
+  ),
+});
+
 export type CreateWorkoutPlanBody = z.infer<typeof createWorkoutPlanBodySchema>;
+export type getWorkoutPlanParams = z.infer<typeof getWorkoutPlanParamsSchema>;
+export type getWorkoutPlanResponse = z.infer<
+  typeof GetWorkoutPlanResponseSchema
+>;
