@@ -4,6 +4,15 @@ export interface IWorkoutSessionRepository {
   findWorkoutSessionByWorkoutDayId(
     workoutDayId: string,
   ): Promise<WorkoutSession | null>;
+  findManyByWorkoutPlanIdAndDateRange(
+    workoutPlanId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<WorkoutSession[]>;
+
+  findAllCompletedByWorkoutPlanId(
+    workoutPlanId: string,
+  ): Promise<WorkoutSession[]>;
   create(workoutSession: WorkoutSession): Promise<void>;
   save(workoutSession: WorkoutSession): Promise<void>;
 }

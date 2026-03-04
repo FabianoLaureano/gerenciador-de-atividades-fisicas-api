@@ -59,6 +59,36 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
     });
   }
 
+  async findActiveWorkoutPlanWithDaysAndSessionsByUserId(
+    userId: string,
+  ): Promise<WorkoutPlan | null> {
+    const workoutPlan = await prisma.workoutPlan.findFirst({
+      where: { userId, isActive: true },
+      include: {
+        workoutDays: {
+          include: {
+            exercises: true,
+            sessions: true,
+          },
+        },
+      },
+    });
+
+    if (!workoutPlan) return null;
+
+    return WorkoutPlan.restore({
+      ...workoutPlan,
+      workoutDays: workoutPlan.workoutDays.map(({ sessions, ...day }) =>
+        WorkoutDay.restore({
+          ...day,
+          exercises: day.exercises.map((exercise) =>
+            WorkoutExercise.restore(exercise),
+          ),
+        }),
+      ),
+    });
+  }
+
   async create(workoutPlan: WorkoutPlan): Promise<void> {
     await prisma.workoutPlan.create({
       data: {

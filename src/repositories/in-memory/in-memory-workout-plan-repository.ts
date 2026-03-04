@@ -4,6 +4,24 @@ import { WorkoutPlan } from "../../models/workout-plan.model.js";
 export class InMemoryWorkoutPlanRepository implements IWorkoutPlanRepository {
   public items: WorkoutPlan[] = [];
 
+  async findWorkoutPlanById(id: string): Promise<WorkoutPlan | null> {
+    return this.items.find((plan) => plan.id === id && plan.isActive) ?? null;
+  }
+
+  async findWorkoutPlanByName(name: string): Promise<WorkoutPlan | null> {
+    return (
+      this.items.find((plan) => plan.name === name && plan.isActive) ?? null
+    );
+  }
+
+  async findActiveWorkoutPlanWithDaysAndSessionsByUserId(
+    userId: string,
+  ): Promise<WorkoutPlan | null> {
+    return (
+      this.items.find((plan) => plan.userId === userId && plan.isActive) ?? null
+    );
+  }
+
   async findWorkoutPlanByUserId(userId: string): Promise<WorkoutPlan | null> {
     return (
       this.items.find((plan) => plan.userId === userId && plan.isActive) ?? null

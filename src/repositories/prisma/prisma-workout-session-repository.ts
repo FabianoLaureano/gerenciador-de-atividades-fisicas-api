@@ -17,6 +17,37 @@ export class PrismaWorkoutSessionRepository implements IWorkoutSessionRepository
     });
   }
 
+  async findManyByWorkoutPlanIdAndDateRange(
+    workoutPlanId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<WorkoutSession[]> {
+    const sessions = await prisma.workoutSession.findMany({
+      where: {
+        workoutDay: { workoutPlanId },
+        startedAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    return sessions.map((session) => WorkoutSession.restore({ ...session }));
+  }
+
+  async findAllCompletedByWorkoutPlanId(
+    workoutPlanId: string,
+  ): Promise<WorkoutSession[]> {
+    const sessions = await prisma.workoutSession.findMany({
+      where: {
+        workoutDay: { workoutPlanId },
+        completedAt: { not: null },
+      },
+    });
+
+    return sessions.map((session) => WorkoutSession.restore({ ...session }));
+  }
+
   async create(workoutSession: WorkoutSession): Promise<void> {
     await prisma.workoutSession.create({
       data: {
