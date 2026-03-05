@@ -50,6 +50,12 @@ export class InMemoryWorkoutSessionRepository implements IWorkoutSessionReposito
     });
   }
 
+  async getWorkoutSessionsByWorkoutDayId(
+    workoutDayId: string,
+  ): Promise<WorkoutSession[]> {
+    return this.items.filter((item) => item.workoutDayId === workoutDayId);
+  }
+
   async create(workoutSession: WorkoutSession): Promise<void> {
     this.items.push(workoutSession);
   }

@@ -48,6 +48,16 @@ export class PrismaWorkoutSessionRepository implements IWorkoutSessionRepository
     return sessions.map((session) => WorkoutSession.restore({ ...session }));
   }
 
+  async getWorkoutSessionsByWorkoutDayId(
+    workoutDayId: string,
+  ): Promise<WorkoutSession[]> {
+    const sessions = await prisma.workoutSession.findMany({
+      where: { workoutDayId },
+    });
+
+    return sessions.map((session) => WorkoutSession.restore({ ...session }));
+  }
+
   async create(workoutSession: WorkoutSession): Promise<void> {
     await prisma.workoutSession.create({
       data: {

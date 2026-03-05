@@ -5,6 +5,8 @@ import { WorkoutPlanController } from "../controllers/workout-plan.controller.js
 import {
   createWorkoutPlanBodySchema,
   createWorkoutPlanResponseSchema,
+  getWorkoutDayParamsSchema,
+  getWorkoutDayResponseSchema,
   GetWorkoutPlanResponseSchema,
 } from "../schemas/workout-plan.schema.js";
 import { ErrorSchema } from "../schemas/error-schema.js";
@@ -21,11 +23,14 @@ import {
 import { UpdateWorkoutSessionController } from "../controllers/update-workout-session.controller.js";
 import { GetWorkoutPlanController } from "../controllers/get-workout-plan.controller.js";
 import { getWorkoutPlanParamsSchema } from "../schemas/workout-plan.schema.js";
+import { GetWorkoutDayController } from "../controllers/get-workout-day.controller.js";
+import { get } from "http";
 
 const workoutPlanController = new WorkoutPlanController();
 const startWorkoutSessionController = new StartWorkoutSessionController();
 const updateWorkoutSessionController = new UpdateWorkoutSessionController();
 const getWorkoutPlanController = new GetWorkoutPlanController();
+const getWorkoutDayController = new GetWorkoutDayController();
 
 export const workoutPlanRoutes = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().route({
@@ -108,5 +113,25 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
       },
     },
     handler: getWorkoutPlanController.handle.bind(getWorkoutPlanController),
+  });
+
+  app.withTypeProvider<ZodTypeProvider>().route({
+    method: "GET",
+    url: "/:workoutPlanId/days/:workoutDayId",
+    schema: {
+      operationId: "getWorkoutDay",
+      tags: ["Workout Plan"],
+      summary: "Get a workout day",
+      params: getWorkoutDayParamsSchema,
+      response: {
+        200: z.object({
+          day: getWorkoutDayResponseSchema,
+        }),
+        401: ErrorSchema,
+        404: ErrorSchema,
+        500: ErrorSchema,
+      },
+    },
+    handler: getWorkoutDayController.handle.bind(getWorkoutDayController),
   });
 };

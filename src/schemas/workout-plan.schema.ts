@@ -70,8 +70,43 @@ export const GetWorkoutPlanResponseSchema = z.object({
   ),
 });
 
+export const getWorkoutDayParamsSchema = z.object({
+  workoutPlanId: z.uuid(),
+  workoutDayId: z.uuid(),
+});
+
+export const getWorkoutDayResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  isRest: z.boolean(),
+  coverImageUrl: z.url().optional(),
+  estimatedDurationInSeconds: z.number(),
+  weekDay: z.enum(WeekDaySchema.options),
+  exercises: z.array(
+    z.object({
+      id: z.uuid(),
+      name: z.string(),
+      order: z.number(),
+      workoutDayId: z.uuid(),
+      sets: z.number(),
+      reps: z.number(),
+      restTimeInSeconds: z.number(),
+    }),
+  ),
+  workoutSessions: z.array(
+    z.object({
+      id: z.uuid(),
+      workoutDayId: z.uuid(),
+      startedAt: z.iso.date().optional(),
+      completedAt: z.iso.date().optional(),
+    }),
+  ),
+});
+
 export type CreateWorkoutPlanBody = z.infer<typeof createWorkoutPlanBodySchema>;
 export type getWorkoutPlanParams = z.infer<typeof getWorkoutPlanParamsSchema>;
 export type getWorkoutPlanResponse = z.infer<
   typeof GetWorkoutPlanResponseSchema
 >;
+export type getWorkoutDayParams = z.infer<typeof getWorkoutDayParamsSchema>;
+export type getWorkoutDayResponse = z.infer<typeof getWorkoutDayResponseSchema>;
