@@ -1,0 +1,47 @@
+import { IUserRepository } from "../repositories/interfaces/user-repository-interface.js";
+import { NotFoundError } from "../errors/not-found-error.js";
+
+interface InputDto {
+  userId: string;
+  weightInGrams: number;
+  heightInCentimeters: number;
+  age: number;
+  bodyFatPercentage: number;
+}
+
+interface OutputDto {
+  userId: string;
+  weightInGrams: number;
+  heightInCentimeters: number;
+  age: number;
+  bodyFatPercentage: number;
+}
+
+export class UpsertUserTrainData {
+  constructor(private readonly userRepository: IUserRepository) {}
+
+  async execute(dto: InputDto): Promise<OutputDto> {
+    const user = await this.userRepository.findById(dto.userId);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    user.updateTrainData({
+      weightInGrams: dto.weightInGrams,
+      heightInCentimeters: dto.heightInCentimeters,
+      age: dto.age,
+      bodyFatPercentage: dto.bodyFatPercentage,
+    });
+
+    await this.userRepository.save(user);
+
+    return {
+      userId: user.id,
+      weightInGrams: user.weightInGrams!,
+      heightInCentimeters: user.heightInCentimeters!,
+      age: user.age!,
+      bodyFatPercentage: user.bodyFatPercentage!,
+    };
+  }
+}

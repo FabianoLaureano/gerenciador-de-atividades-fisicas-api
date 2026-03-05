@@ -14,6 +14,7 @@ import { errorHandler } from "./lib/error-handler.js";
 import { workoutPlanRoutes } from "./routes/workout-plans.routes.js";
 import { homeRoutes } from "./routes/home.routes.js";
 import { statsRoutes } from "./routes/stats.routes.js";
+import { aiRoutes } from "./routes/ai.routes.js";
 
 const app = Fastify({ logger: true });
 
@@ -63,6 +64,7 @@ await app.register(fastifyApiReference, {
 await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
 await app.register(homeRoutes, { prefix: "/home" });
 await app.register(statsRoutes, { prefix: "/stats" });
+await app.register(aiRoutes, { prefix: "/ai" });
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
