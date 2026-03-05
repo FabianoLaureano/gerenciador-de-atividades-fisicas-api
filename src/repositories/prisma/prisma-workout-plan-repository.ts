@@ -5,6 +5,40 @@ import { WorkoutDay } from "../../models/workout-day.model.js";
 import { WorkoutExercise } from "../../models/workout-exercise.model.js";
 
 export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
+  async findManyByUserId(
+    userId: string,
+    active?: boolean,
+  ): Promise<WorkoutPlan[]> {
+    const workoutPlans = await prisma.workoutPlan.findMany({
+      where: {
+        userId,
+        ...(active !== undefined ? { isActive: active } : {}),
+      },
+      include: {
+        workoutDays: {
+          include: {
+            exercises: { orderBy: { order: "asc" } },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return workoutPlans.map((plan) =>
+      WorkoutPlan.restore({
+        ...plan,
+        workoutDays: plan.workoutDays.map((day) =>
+          WorkoutDay.restore({
+            ...day,
+            exercises: day.exercises.map((exercise) =>
+              WorkoutExercise.restore(exercise),
+            ),
+          }),
+        ),
+      }),
+    );
+  }
+
   async findWorkoutPlanById(id: string): Promise<WorkoutPlan | null> {
     const workoutPlan = await prisma.workoutPlan.findUnique({
       where: { id, isActive: true },

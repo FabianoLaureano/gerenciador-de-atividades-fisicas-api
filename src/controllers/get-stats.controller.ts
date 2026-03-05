@@ -1,4 +1,3 @@
-// src/controllers/stats.controller.ts
 import { FastifyRequest, FastifyReply } from "fastify";
 import { makeGetStats } from "../usecases/factories/make-get-stats.js";
 import { UnauthorizedError } from "../errors/unauthorized-error.js";

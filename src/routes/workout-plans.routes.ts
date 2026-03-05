@@ -8,6 +8,8 @@ import {
   getWorkoutDayParamsSchema,
   getWorkoutDayResponseSchema,
   GetWorkoutPlanResponseSchema,
+  ListWorkoutPlansQuerySchema,
+  listWorkoutPlansResponseSchema,
 } from "../schemas/workout-plan.schema.js";
 import { ErrorSchema } from "../schemas/error-schema.js";
 import {
@@ -133,5 +135,24 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
       },
     },
     handler: getWorkoutDayController.handle.bind(getWorkoutDayController),
+  });
+
+  app.withTypeProvider<ZodTypeProvider>().route({
+    method: "GET",
+    url: "/",
+    schema: {
+      operationId: "listWorkoutPlans",
+      tags: ["Workout Plan"],
+      summary: "List workout plans",
+      querystring: ListWorkoutPlansQuerySchema,
+      response: {
+        200: z.object({
+          plans: listWorkoutPlansResponseSchema,
+        }),
+        401: ErrorSchema,
+        500: ErrorSchema,
+      },
+    },
+    handler: workoutPlanController.list.bind(workoutPlanController),
   });
 };

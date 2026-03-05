@@ -1,4 +1,3 @@
-// src/schemas/workout-plan.schema.ts
 import { z } from "zod";
 import { WeekDaySchema } from "../models/workout-day.model.js";
 
@@ -103,6 +102,41 @@ export const getWorkoutDayResponseSchema = z.object({
   ),
 });
 
+export const ListWorkoutPlansQuerySchema = z.object({
+  active: z
+    .enum(["true", "false"])
+    .transform((v) => v === "true")
+    .optional(),
+});
+
+export const listWorkoutPlansResponseSchema = z.array(
+  z.object({
+    id: z.uuid(),
+    name: z.string(),
+    isActive: z.boolean(),
+    workoutDays: z.array(
+      z.object({
+        id: z.uuid(),
+        name: z.string(),
+        weekDay: z.enum(WeekDaySchema.options),
+        isRest: z.boolean(),
+        estimatedDurationInSeconds: z.number(),
+        coverImageUrl: z.string().nullable().optional(),
+        exercises: z.array(
+          z.object({
+            id: z.uuid(),
+            order: z.number(),
+            name: z.string(),
+            sets: z.number(),
+            reps: z.number(),
+            restTimeInSeconds: z.number(),
+          }),
+        ),
+      }),
+    ),
+  }),
+);
+
 export type CreateWorkoutPlanBody = z.infer<typeof createWorkoutPlanBodySchema>;
 export type getWorkoutPlanParams = z.infer<typeof getWorkoutPlanParamsSchema>;
 export type getWorkoutPlanResponse = z.infer<
@@ -110,3 +144,7 @@ export type getWorkoutPlanResponse = z.infer<
 >;
 export type getWorkoutDayParams = z.infer<typeof getWorkoutDayParamsSchema>;
 export type getWorkoutDayResponse = z.infer<typeof getWorkoutDayResponseSchema>;
+export type ListWorkoutPlansResponse = z.infer<
+  typeof listWorkoutPlansResponseSchema
+>;
+export type ListWorkoutPlansQuery = z.infer<typeof ListWorkoutPlansQuerySchema>;

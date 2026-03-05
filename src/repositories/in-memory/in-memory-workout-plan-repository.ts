@@ -4,6 +4,18 @@ import { WorkoutPlan } from "../../models/workout-plan.model.js";
 export class InMemoryWorkoutPlanRepository implements IWorkoutPlanRepository {
   public items: WorkoutPlan[] = [];
 
+  async findManyByUserId(
+    userId: string,
+    active?: boolean,
+  ): Promise<WorkoutPlan[]> {
+    return this.items.filter((plan) => {
+      return (
+        plan.userId === userId &&
+        (active !== undefined ? plan.isActive === active : true)
+      );
+    });
+  }
+
   async findWorkoutPlanById(id: string): Promise<WorkoutPlan | null> {
     return this.items.find((plan) => plan.id === id && plan.isActive) ?? null;
   }
