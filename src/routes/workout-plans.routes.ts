@@ -26,7 +26,6 @@ import { UpdateWorkoutSessionController } from "../controllers/update-workout-se
 import { GetWorkoutPlanController } from "../controllers/get-workout-plan.controller.js";
 import { getWorkoutPlanParamsSchema } from "../schemas/workout-plan.schema.js";
 import { GetWorkoutDayController } from "../controllers/get-workout-day.controller.js";
-import { get } from "http";
 
 const workoutPlanController = new WorkoutPlanController();
 const startWorkoutSessionController = new StartWorkoutSessionController();
