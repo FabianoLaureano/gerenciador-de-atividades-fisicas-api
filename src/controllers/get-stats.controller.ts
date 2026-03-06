@@ -24,6 +24,6 @@ export class GetStatsController {
       to: request.query.to,
     });
 
-    return reply.status(200).send({ stats: result });
+    return reply.status(200).send(result);
   }
 }

@@ -23,6 +23,6 @@ export class GetWorkoutPlanController {
       workoutPlanId: request.params.workoutPlanId,
     });
 
-    return reply.status(200).send({ plan: workoutPlan });
+    return reply.status(200).send(workoutPlan);
   }
 }

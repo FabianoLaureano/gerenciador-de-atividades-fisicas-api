@@ -15,7 +15,7 @@ interface OutputDto {
     weekDay: WeekDay;
     name: string;
     isRest: boolean;
-    coverImageUrl?: string | null | undefined;
+    coverImageUrl?: string | null;
     estimatedDurationInSeconds: number;
     exercisesCount: number;
   }>;
@@ -38,7 +38,7 @@ export class GetWorkoutPlan {
         weekDay: day.weekDay,
         name: day.name,
         isRest: day.isRest,
-        coverImageUrl: day.coverImageUrl ?? null,
+        coverImageUrl: day.coverImageUrl ?? undefined,
         estimatedDurationInSeconds: day.estimatedDurationInSeconds,
         exercisesCount: day.exercises.length,
       })),

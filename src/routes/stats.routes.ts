@@ -21,9 +21,7 @@ export const statsRoutes = async (app: FastifyInstance) => {
       summary: "Get workout stats",
       querystring: StatsQuerySchema,
       response: {
-        200: z.object({
-          stats: getStatsResponseSchema,
-        }),
+        200: getStatsResponseSchema,
         401: ErrorSchema,
         404: ErrorSchema,
         500: ErrorSchema,

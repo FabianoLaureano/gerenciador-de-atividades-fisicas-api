@@ -105,9 +105,7 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
       summary: "Get a workout plan",
       params: getWorkoutPlanParamsSchema,
       response: {
-        200: z.object({
-          plan: GetWorkoutPlanResponseSchema,
-        }),
+        200: GetWorkoutPlanResponseSchema,
         401: ErrorSchema,
         404: ErrorSchema,
         500: ErrorSchema,
@@ -125,9 +123,7 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
       summary: "Get a workout day",
       params: getWorkoutDayParamsSchema,
       response: {
-        200: z.object({
-          day: getWorkoutDayResponseSchema,
-        }),
+        200: getWorkoutDayResponseSchema,
         401: ErrorSchema,
         404: ErrorSchema,
         500: ErrorSchema,
@@ -145,9 +141,7 @@ export const workoutPlanRoutes = (app: FastifyInstance) => {
       summary: "List workout plans",
       querystring: ListWorkoutPlansQuerySchema,
       response: {
-        200: z.object({
-          plans: listWorkoutPlansResponseSchema,
-        }),
+        200: listWorkoutPlansResponseSchema,
         401: ErrorSchema,
         500: ErrorSchema,
       },

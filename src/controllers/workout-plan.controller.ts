@@ -45,6 +45,6 @@ export class WorkoutPlanController {
       active: request.query.active,
     });
 
-    return reply.status(200).send({ plans: result });
+    return reply.status(200).send(result);
   }
 }

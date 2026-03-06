@@ -24,6 +24,6 @@ export class GetWorkoutDayController {
       workoutDayId: request.params.workoutDayId,
     });
 
-    return reply.status(200).send({ day: workoutDay });
+    return reply.status(200).send(workoutDay);
   }
 }
