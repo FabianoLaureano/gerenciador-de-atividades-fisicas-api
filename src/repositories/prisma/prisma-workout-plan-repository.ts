@@ -31,7 +31,13 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
           WorkoutDay.restore({
             ...day,
             exercises: day.exercises.map((exercise) =>
-              WorkoutExercise.restore(exercise),
+              WorkoutExercise.restore({
+                ...exercise,
+                sets: exercise.sets ?? undefined,
+                reps: exercise.reps ?? undefined,
+                restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
+                order: exercise.order ?? undefined,
+              }),
             ),
           }),
         ),
@@ -59,7 +65,13 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
         WorkoutDay.restore({
           ...day,
           exercises: day.exercises.map((exercise) =>
-            WorkoutExercise.restore(exercise),
+            WorkoutExercise.restore({
+              ...exercise,
+              sets: exercise.sets ?? undefined,
+              reps: exercise.reps ?? undefined,
+              restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
+              order: exercise.order ?? undefined,
+            }),
           ),
         }),
       ),
@@ -86,7 +98,13 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
         WorkoutDay.restore({
           ...day,
           exercises: day.exercises.map((exercise) =>
-            WorkoutExercise.restore(exercise),
+            WorkoutExercise.restore({
+              ...exercise,
+              sets: exercise.sets ?? undefined,
+              reps: exercise.reps ?? undefined,
+              restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
+              order: exercise.order ?? undefined,
+            }),
           ),
         }),
       ),
@@ -116,7 +134,13 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
         WorkoutDay.restore({
           ...day,
           exercises: day.exercises.map((exercise) =>
-            WorkoutExercise.restore(exercise),
+            WorkoutExercise.restore({
+              ...exercise,
+              sets: exercise.sets ?? undefined,
+              reps: exercise.reps ?? undefined,
+              restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
+              order: exercise.order ?? undefined,
+            }),
           ),
         }),
       ),
@@ -144,10 +168,10 @@ export class PrismaWorkoutPlanRepository implements IWorkoutPlanRepository {
               create: day.exercises.map((exercise) => ({
                 id: exercise.id,
                 name: exercise.name,
-                order: exercise.order,
-                sets: exercise.sets,
-                reps: exercise.reps,
-                restTimeInSeconds: exercise.restTimeInSeconds,
+                order: exercise.order ?? undefined,
+                sets: exercise.sets ?? undefined,
+                reps: exercise.reps ?? undefined,
+                restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
               })),
             },
           })),

@@ -23,11 +23,11 @@ interface OutputDto {
   exercises: Array<{
     id: string;
     name: string;
-    order: number;
+    order?: number;
     workoutDayId: string;
-    sets: number;
-    reps: number;
-    restTimeInSeconds: number;
+    sets?: number;
+    reps?: number;
+    restTimeInSeconds?: number;
   }>;
   workoutSessions: Array<{
     id: string;
@@ -61,7 +61,9 @@ export class GetWorkoutDay {
       throw new NotFoundError("Workout day not found");
     }
 
-    const exercises = workoutDay.exercises.sort((a, b) => a.order - b.order);
+    const exercises = workoutDay.exercises.sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    );
 
     const workoutSessions =
       await this.workoutSessionRepository.getWorkoutSessionsByWorkoutDayId(
@@ -81,12 +83,12 @@ export class GetWorkoutDay {
       estimatedDurationInSeconds: workoutDay.estimatedDurationInSeconds,
       exercises: exercises.map((exercise) => ({
         id: exercise.id,
-        order: exercise.order,
+        order: exercise.order ?? undefined,
         workoutDayId: workoutDay.id,
         name: exercise.name,
-        sets: exercise.sets,
-        reps: exercise.reps,
-        restTimeInSeconds: exercise.restTimeInSeconds,
+        sets: exercise.sets ?? undefined,
+        reps: exercise.reps ?? undefined,
+        restTimeInSeconds: exercise.restTimeInSeconds ?? undefined,
       })),
       workoutSessions: workoutSessions.map((session) => ({
         id: session.id,

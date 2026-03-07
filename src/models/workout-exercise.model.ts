@@ -2,11 +2,11 @@ import { z } from "zod";
 
 const workoutExercisePropsSchema = z.object({
   id: z.uuid(),
-  order: z.number().int().min(0),
+  order: z.number().int().min(0).optional(),
   name: z.string().trim().min(1),
-  sets: z.number().int().min(1),
-  reps: z.number().int().min(1),
-  restTimeInSeconds: z.number().int().min(1),
+  sets: z.number().int().min(1).optional(),
+  reps: z.number().int().min(1).optional(),
+  restTimeInSeconds: z.number().int().min(1).optional(),
 });
 
 type WorkoutExerciseProps = z.infer<typeof workoutExercisePropsSchema>;
@@ -29,10 +29,22 @@ export class WorkoutExercise {
     return new WorkoutExercise(data);
   }
 
-  get id() { return this.data.id; }
-  get order() { return this.data.order; }
-  get name() { return this.data.name; }
-  get sets() { return this.data.sets; }
-  get reps() { return this.data.reps; }
-  get restTimeInSeconds() { return this.data.restTimeInSeconds; }
+  get id() {
+    return this.data.id;
+  }
+  get order() {
+    return this.data.order;
+  }
+  get name() {
+    return this.data.name;
+  }
+  get sets() {
+    return this.data.sets;
+  }
+  get reps() {
+    return this.data.reps;
+  }
+  get restTimeInSeconds() {
+    return this.data.restTimeInSeconds;
+  }
 }

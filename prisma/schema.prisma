@@ -80,14 +80,14 @@ model WorkoutDay {
 model WorkoutExercise {
   id    String @id @default(uuid())
   name  String
-  order Int
+  order Int?
 
   workoutDayId String
   workoutDay   WorkoutDay @relation(fields: [workoutDayId], references: [id], onDelete: Cascade)
 
-  sets              Int
-  reps              Int
-  restTimeInSeconds Int
+  sets              Int?
+  reps              Int?
+  restTimeInSeconds Int?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }

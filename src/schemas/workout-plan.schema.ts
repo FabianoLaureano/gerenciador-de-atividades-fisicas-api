@@ -38,11 +38,11 @@ export const createWorkoutPlanResponseSchema = z.object({
       exercises: z.array(
         z.object({
           id: z.uuid(),
-          order: z.number(),
+          order: z.number().optional(),
           name: z.string(),
-          sets: z.number(),
-          reps: z.number(),
-          restTimeInSeconds: z.number(),
+          sets: z.number().optional(),
+          reps: z.number().optional(),
+          restTimeInSeconds: z.number().optional(),
         }),
       ),
     }),
@@ -85,11 +85,11 @@ export const getWorkoutDayResponseSchema = z.object({
     z.object({
       id: z.uuid(),
       name: z.string(),
-      order: z.number(),
+      order: z.number().optional(),
       workoutDayId: z.uuid(),
-      sets: z.number(),
-      reps: z.number(),
-      restTimeInSeconds: z.number(),
+      sets: z.number().optional(),
+      reps: z.number().optional(),
+      restTimeInSeconds: z.number().optional(),
     }),
   ),
   workoutSessions: z.array(
@@ -125,11 +125,11 @@ export const listWorkoutPlansResponseSchema = z.array(
         exercises: z.array(
           z.object({
             id: z.uuid(),
-            order: z.number(),
+            order: z.number().optional(),
             name: z.string(),
-            sets: z.number(),
-            reps: z.number(),
-            restTimeInSeconds: z.number(),
+            sets: z.number().optional(),
+            reps: z.number().optional(),
+            restTimeInSeconds: z.number().optional(),
           }),
         ),
       }),

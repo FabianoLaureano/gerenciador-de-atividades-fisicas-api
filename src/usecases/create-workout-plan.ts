@@ -36,11 +36,11 @@ interface OutputDto {
     coverImageUrl?: string | null | undefined;
     exercises: Array<{
       id: string;
-      order: number;
+      order?: number;
       name: string;
-      sets: number;
-      reps: number;
-      restTimeInSeconds: number;
+      sets?: number;
+      reps?: number;
+      restTimeInSeconds?: number;
     }>;
   }>;
 }
@@ -64,8 +64,11 @@ export class CreateWorkoutPlan {
       workoutDays: dto.workoutDays.map((day) =>
         WorkoutDay.create({
           ...day,
-          exercises: day.exercises.map((exercise) =>
-            WorkoutExercise.create(exercise),
+          exercises: day.exercises.map((exercise, index) =>
+            WorkoutExercise.create({
+              ...exercise,
+              order: exercise.order ?? index,
+            }),
           ),
         }),
       ),
