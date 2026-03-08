@@ -16,8 +16,25 @@ import { homeRoutes } from "./routes/home.routes.js";
 import { statsRoutes } from "./routes/stats.routes.js";
 import { aiRoutes } from "./routes/ai.routes.js";
 import { meRoutes } from "./routes/me.routes.js";
+import { env } from "./env/index.js";
 
-const app = Fastify({ logger: true });
+const envToLogger = {
+  dev: {
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "HH:MM:ss Z",
+        ignore: "pid,hostname",
+      },
+    },
+  },
+  prod: true,
+  test: false,
+};
+
+const app = Fastify({
+  logger: envToLogger[env.NODE_ENV],
+});
 
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
