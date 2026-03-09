@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const trainingLogPropsSchema = z.object({
   id: z.uuid(),
-  userId: z.uuid(),
+  userId: z.string(),
   name: z.string().trim().min(1),
   description: z.string().optional(),
   createdAt: z.date(),
@@ -39,6 +39,9 @@ export class TrainingLog {
   }
   get userId() {
     return this.data.userId;
+  }
+  get name() {
+    return this.data.name;
   }
   get description() {
     return this.data.description;

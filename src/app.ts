@@ -17,6 +17,7 @@ import { statsRoutes } from "./routes/stats.routes.js";
 import { aiRoutes } from "./routes/ai.routes.js";
 import { meRoutes } from "./routes/me.routes.js";
 import { env } from "./env/index.js";
+import { trainingLogRoutes } from "./routes/training-logs.routes.js";
 
 const envToLogger = {
   dev: {
@@ -84,6 +85,7 @@ await app.register(homeRoutes, { prefix: "/home" });
 await app.register(statsRoutes, { prefix: "/stats" });
 await app.register(aiRoutes, { prefix: "/ai" });
 await app.register(meRoutes, { prefix: "/me" });
+await app.register(trainingLogRoutes, { prefix: "/training-logs" });
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",
