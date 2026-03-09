@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { IWorkoutPlanRepository } from "../repositories/interfaces/workout-plan-repository-interface.js";
 import { IWorkoutSessionRepository } from "../repositories/interfaces/workout-session-repository-interface.js";
+import { ITrainingLogRepository } from "../repositories/interfaces/training-log-repository-interface.js";
 import { WorkoutStreakCalculator } from "../services/workout-streak-calculator.js";
 import { WeekDay } from "../models/workout-day.model.js";
 
@@ -50,9 +51,11 @@ export class GetHomeData {
   constructor(
     private readonly workoutPlanRepository: IWorkoutPlanRepository,
     private readonly workoutSessionRepository: IWorkoutSessionRepository,
+    private readonly trainingLogRepository: ITrainingLogRepository,
   ) {
     this.streakCalculator = new WorkoutStreakCalculator(
       workoutSessionRepository,
+      trainingLogRepository,
     );
   }
 
@@ -102,9 +105,29 @@ export class GetHomeData {
       };
     }
 
+    const weekLogs =
+      await this.trainingLogRepository.findManyByUserIdAndDateRange(
+        dto.userId,
+        weekStart.toDate(),
+        weekEnd.toDate(),
+      );
+
+    weekLogs.forEach((log) => {
+      const dateKey = dayjs.utc(log.createdAt).format("YYYY-MM-DD");
+      if (!consistencyByDay[dateKey]) {
+        consistencyByDay[dateKey] = {
+          workoutDayCompleted: false,
+          workoutDayStarted: false,
+        };
+      }
+      consistencyByDay[dateKey].workoutDayStarted = true;
+      consistencyByDay[dateKey].workoutDayCompleted = true;
+    });
+
     const workoutStreak = workoutPlan
       ? await this.streakCalculator.calculate(
           workoutPlan.id,
+          dto.userId,
           workoutPlan.workoutDays,
           currentDate,
         )

@@ -42,4 +42,28 @@ export class PrismaTrainingLogRepository implements ITrainingLogRepository {
       description: log.description ?? undefined,
     });
   }
+
+  async findManyByUserIdAndDateRange(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<TrainingLog[]> {
+    const logs = await prisma.trainingLog.findMany({
+      where: {
+        userId,
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return logs.map((log) =>
+      TrainingLog.restore({
+        ...log,
+        description: log.description ?? undefined,
+      }),
+    );
+  }
 }

@@ -1,8 +1,8 @@
-// src/usecases/get-stats.ts
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { IWorkoutPlanRepository } from "../repositories/interfaces/workout-plan-repository-interface.js";
 import { IWorkoutSessionRepository } from "../repositories/interfaces/workout-session-repository-interface.js";
+import { ITrainingLogRepository } from "../repositories/interfaces/training-log-repository-interface.js";
 import { WorkoutStreakCalculator } from "../services/workout-streak-calculator.js";
 import { NotFoundError } from "../errors/not-found-error.js";
 
@@ -34,9 +34,11 @@ export class GetStats {
   constructor(
     private readonly workoutPlanRepository: IWorkoutPlanRepository,
     private readonly workoutSessionRepository: IWorkoutSessionRepository,
+    private readonly trainingLogRepository: ITrainingLogRepository,
   ) {
     this.streakCalculator = new WorkoutStreakCalculator(
       workoutSessionRepository,
+      trainingLogRepository,
     );
   }
 
@@ -53,12 +55,18 @@ export class GetStats {
       throw new NotFoundError("Active workout plan not found");
     }
 
-    const sessions =
-      await this.workoutSessionRepository.findManyByWorkoutPlanIdAndDateRange(
+    const [sessions, trainingLogs] = await Promise.all([
+      this.workoutSessionRepository.findManyByWorkoutPlanIdAndDateRange(
         workoutPlan.id,
         fromDate.toDate(),
         toDate.toDate(),
-      );
+      ),
+      this.trainingLogRepository.findManyByUserIdAndDateRange(
+        dto.userId,
+        fromDate.toDate(),
+        toDate.toDate(),
+      ),
+    ]);
 
     const consistencyByDay: Record<
       string,
@@ -82,6 +90,20 @@ export class GetStats {
       }
     });
 
+    trainingLogs.forEach((log) => {
+      const dateKey = dayjs.utc(log.createdAt).format("YYYY-MM-DD");
+
+      if (!consistencyByDay[dateKey]) {
+        consistencyByDay[dateKey] = {
+          workoutDayCompleted: false,
+          workoutDayStarted: false,
+        };
+      }
+
+      consistencyByDay[dateKey].workoutDayStarted = true;
+      consistencyByDay[dateKey].workoutDayCompleted = true;
+    });
+
     const completedSessions = sessions.filter((s) => s.completedAt !== null);
     const completedWorkoutsCount = completedSessions.length;
     const conclusionRate =
@@ -95,6 +117,7 @@ export class GetStats {
 
     const workoutStreak = await this.streakCalculator.calculate(
       workoutPlan.id,
+      dto.userId,
       workoutPlan.workoutDays,
       toDate,
     );

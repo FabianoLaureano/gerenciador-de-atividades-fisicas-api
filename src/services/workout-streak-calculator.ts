@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { IWorkoutSessionRepository } from "../repositories/interfaces/workout-session-repository-interface.js";
+import { ITrainingLogRepository } from "../repositories/interfaces/training-log-repository-interface.js";
 import { WeekDay } from "../models/workout-day.model.js";
 
 dayjs.extend(utc);
@@ -23,10 +24,12 @@ interface WorkoutDayInfo {
 export class WorkoutStreakCalculator {
   constructor(
     private readonly workoutSessionRepository: IWorkoutSessionRepository,
+    private readonly trainingLogRepository: ITrainingLogRepository,
   ) {}
 
   async calculate(
     workoutPlanId: string,
+    userId: string,
     workoutDays: WorkoutDayInfo[],
     currentDate: dayjs.Dayjs,
   ): Promise<number> {
@@ -35,14 +38,21 @@ export class WorkoutStreakCalculator {
       workoutDays.filter((d) => d.isRest).map((d) => d.weekDay),
     );
 
-    const completedSessions =
-      await this.workoutSessionRepository.findAllCompletedByWorkoutPlanId(
+    const [completedSessions, trainingLogs] = await Promise.all([
+      this.workoutSessionRepository.findAllCompletedByWorkoutPlanId(
         workoutPlanId,
-      );
+      ),
+      this.trainingLogRepository.findManyByUserId(userId),
+    ]);
 
-    const completedDates = new Set(
-      completedSessions.map((s) => dayjs.utc(s.startedAt).format("YYYY-MM-DD")),
-    );
+    const completedDates = new Set([
+      ...completedSessions.map((s) =>
+        dayjs.utc(s.startedAt).format("YYYY-MM-DD"),
+      ),
+      ...trainingLogs.map((log) =>
+        dayjs.utc(log.createdAt).format("YYYY-MM-DD"),
+      ),
+    ]);
 
     let streak = 0;
     let day = currentDate;

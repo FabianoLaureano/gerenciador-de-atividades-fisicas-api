@@ -17,4 +17,18 @@ export class InMemoryTrainingLogRepository implements ITrainingLogRepository {
   async findById(id: string): Promise<TrainingLog | null> {
     return this.items.find((log) => log.id === id) ?? null;
   }
+
+  async findManyByUserIdAndDateRange(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<TrainingLog[]> {
+    return this.items.filter((log) => {
+      return (
+        log.userId === userId &&
+        log.createdAt >= startDate &&
+        log.createdAt <= endDate
+      );
+    });
+  }
 }
