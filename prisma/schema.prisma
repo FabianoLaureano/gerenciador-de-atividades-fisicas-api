@@ -111,7 +111,6 @@ model TrainingLog {
   name   String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  date        DateTime @db.Date
   description String?
 
   createdAt DateTime @default(now())
