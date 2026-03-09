@@ -11,6 +11,7 @@ interface OutputDto {
   heightInCentimeters: number;
   age: number;
   bodyFatPercentage: number;
+  gender: string;
 }
 
 export class GetUserTrainData {
@@ -30,6 +31,7 @@ export class GetUserTrainData {
       heightInCentimeters: user.heightInCentimeters!,
       age: user.age!,
       bodyFatPercentage: user.bodyFatPercentage!,
+      gender: user.gender!,
     };
   }
 }

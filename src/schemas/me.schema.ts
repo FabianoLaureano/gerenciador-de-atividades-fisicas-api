@@ -5,6 +5,7 @@ export const UpsertUserTrainDataBodySchema = z.object({
   heightInCentimeters: z.number().min(0),
   age: z.number().min(0),
   bodyFatPercentage: z.number().min(0).max(100),
+  gender: z.string().min(1),
 });
 
 export const UserTrainDataResponseSchema = z.object({
@@ -14,6 +15,7 @@ export const UserTrainDataResponseSchema = z.object({
   heightInCentimeters: z.number(),
   age: z.number(),
   bodyFatPercentage: z.number().min(0).max(100),
+  gender: z.string(),
 });
 
 export type UpsertUserTrainDataBody = z.infer<

@@ -43,7 +43,7 @@ export class User {
   }
 
   get gender() {
-     return this.data.gender;
+    return this.data.gender;
   }
 
   hasTrainData(): boolean {
@@ -51,7 +51,8 @@ export class User {
       this.data.weightInGrams !== null &&
       this.data.heightInCentimeters !== null &&
       this.data.age !== null &&
-      this.data.bodyFatPercentage !== null
+      this.data.bodyFatPercentage !== null &&
+      this.data.gender !== null
     );
   }
 
