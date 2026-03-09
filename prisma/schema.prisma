@@ -108,6 +108,7 @@ model WorkoutSession {
 model TrainingLog {
   id     String @id @default(uuid())
   userId String
+  name   String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   date        DateTime @db.Date
