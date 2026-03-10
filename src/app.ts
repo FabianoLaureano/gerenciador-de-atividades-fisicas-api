@@ -63,23 +63,25 @@ await app.register(fastifyCors, {
   credentials: true,
 });
 
-await app.register(fastifyApiReference, {
-  routePrefix: "/docs",
-  configuration: {
-    sources: [
-      {
-        title: "API gerenciadora de treinos",
-        slug: "api-gerenciadora-de-treinos",
-        url: "/swagger.json",
-      },
-      {
-        title: "Auth API",
-        slug: "auth-api",
-        url: "/api/auth/open-api/generate-schema",
-      },
-    ],
-  },
-});
+if (env.NODE_ENV !== "prod") {
+  await app.register(fastifyApiReference, {
+    routePrefix: "/docs",
+    configuration: {
+      sources: [
+        {
+          title: "API gerenciadora de treinos",
+          slug: "api-gerenciadora-de-treinos",
+          url: "/swagger.json",
+        },
+        {
+          title: "Auth API",
+          slug: "auth-api",
+          url: "/api/auth/open-api/generate-schema",
+        },
+      ],
+    },
+  });
+}
 
 await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
 await app.register(homeRoutes, { prefix: "/home" });
