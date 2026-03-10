@@ -6,7 +6,10 @@ import { env } from "../env/index.js";
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://gerenciador-de-atividades-fisicas-f.vercel.app",
+  ],
   emailAndPassword: {
     enabled: true,
   },
