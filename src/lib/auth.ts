@@ -11,10 +11,10 @@ export const auth = betterAuth({
       enabled: true,
       domain: ".vercel.app",
     },
-  },
-  cookieOptions: {
-    sameSite: "none",
-    secure: true,
+    cookieOptions: {
+      sameSite: "none",
+      secure: true,
+    },
   },
   trustedOrigins: [
     "http://localhost:3000",
