@@ -62,6 +62,7 @@ export class AiController {
               .min(0)
               .max(100)
               .describe("Percentual de gordura corporal (0 a 100)"),
+            gender: z.string().describe("Genero do usuario"),
           }),
           execute: async (params) => {
             return makeUpsertUserTrainData().execute({ userId, ...params });

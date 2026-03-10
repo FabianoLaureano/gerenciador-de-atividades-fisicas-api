@@ -17,13 +17,13 @@ interface OutputDto {
     isRest: boolean;
     estimatedDurationInSeconds: number;
     coverImageUrl?: string;
-    exercises: Array<{
+    exercises?: Array<{
       id: string;
-      order: number;
-      name: string;
-      sets: number;
-      reps: number;
-      restTimeInSeconds: number;
+      order?: number;
+      name?: string;
+      sets?: number;
+      reps?: number;
+      restTimeInSeconds?: number;
     }>;
   }>;
 }
