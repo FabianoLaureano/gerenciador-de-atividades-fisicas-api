@@ -12,6 +12,10 @@ export const auth = betterAuth({
       domain: ".vercel.app",
     },
   },
+  cookieOptions: {
+    sameSite: "none",
+    secure: true,
+  },
   trustedOrigins: [
     "http://localhost:3000",
     "https://gerenciador-de-atividades-fisicas-f.vercel.app",
