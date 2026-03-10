@@ -59,7 +59,10 @@ await app.register(fastifySwagger, {
 });
 
 await app.register(fastifyCors, {
-  origin: ["http://localhost:3000"],
+  origin: [
+    "http://localhost:3000",
+    "https://gerenciador-de-atividades-fisicas-f.vercel.app",
+  ],
   credentials: true,
 });
 
