@@ -42,6 +42,7 @@ export class MeController {
       heightInCentimeters: request.body.heightInCentimeters,
       age: request.body.age,
       bodyFatPercentage: request.body.bodyFatPercentage,
+      gender: request.body.gender,
     });
 
     return reply.status(200).send(result);

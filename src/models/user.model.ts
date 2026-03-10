@@ -61,10 +61,12 @@ export class User {
     heightInCentimeters: number;
     age: number;
     bodyFatPercentage: number;
+    gender: string;
   }): void {
     this.data.weightInGrams = data.weightInGrams;
     this.data.heightInCentimeters = data.heightInCentimeters;
     this.data.age = data.age;
     this.data.bodyFatPercentage = data.bodyFatPercentage;
+    this.data.gender = data.gender;
   }
 }

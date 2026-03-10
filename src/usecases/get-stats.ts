@@ -4,7 +4,6 @@ import { IWorkoutPlanRepository } from "../repositories/interfaces/workout-plan-
 import { IWorkoutSessionRepository } from "../repositories/interfaces/workout-session-repository-interface.js";
 import { ITrainingLogRepository } from "../repositories/interfaces/training-log-repository-interface.js";
 import { WorkoutStreakCalculator } from "../services/workout-streak-calculator.js";
-import { NotFoundError } from "../errors/not-found-error.js";
 
 dayjs.extend(utc);
 
@@ -51,16 +50,14 @@ export class GetStats {
         dto.userId,
       );
 
-    if (!workoutPlan) {
-      throw new NotFoundError("Active workout plan not found");
-    }
-
     const [sessions, trainingLogs] = await Promise.all([
-      this.workoutSessionRepository.findManyByWorkoutPlanIdAndDateRange(
-        workoutPlan.id,
-        fromDate.toDate(),
-        toDate.toDate(),
-      ),
+      workoutPlan
+        ? this.workoutSessionRepository.findManyByWorkoutPlanIdAndDateRange(
+            workoutPlan.id,
+            fromDate.toDate(),
+            toDate.toDate(),
+          )
+        : Promise.resolve([]),
       this.trainingLogRepository.findManyByUserIdAndDateRange(
         dto.userId,
         fromDate.toDate(),
@@ -75,16 +72,13 @@ export class GetStats {
 
     sessions.forEach((session) => {
       const dateKey = dayjs.utc(session.startedAt).format("YYYY-MM-DD");
-
       if (!consistencyByDay[dateKey]) {
         consistencyByDay[dateKey] = {
           workoutDayCompleted: false,
           workoutDayStarted: false,
         };
       }
-
       consistencyByDay[dateKey].workoutDayStarted = true;
-
       if (session.completedAt !== null) {
         consistencyByDay[dateKey].workoutDayCompleted = true;
       }
@@ -92,14 +86,12 @@ export class GetStats {
 
     trainingLogs.forEach((log) => {
       const dateKey = dayjs.utc(log.createdAt).format("YYYY-MM-DD");
-
       if (!consistencyByDay[dateKey]) {
         consistencyByDay[dateKey] = {
           workoutDayCompleted: false,
           workoutDayStarted: false,
         };
       }
-
       consistencyByDay[dateKey].workoutDayStarted = true;
       consistencyByDay[dateKey].workoutDayCompleted = true;
     });
@@ -115,12 +107,14 @@ export class GetStats {
       return total + end.diff(start, "second");
     }, 0);
 
-    const workoutStreak = await this.streakCalculator.calculate(
-      workoutPlan.id,
-      dto.userId,
-      workoutPlan.workoutDays,
-      toDate,
-    );
+    const workoutStreak = workoutPlan
+      ? await this.streakCalculator.calculate(
+          workoutPlan.id,
+          dto.userId,
+          workoutPlan.workoutDays,
+          toDate,
+        )
+      : 0;
 
     return {
       workoutStreak,

@@ -7,6 +7,7 @@ interface InputDto {
   heightInCentimeters: number;
   age: number;
   bodyFatPercentage: number;
+  gender: string;
 }
 
 interface OutputDto {
@@ -16,6 +17,7 @@ interface OutputDto {
   heightInCentimeters: number;
   age: number;
   bodyFatPercentage: number;
+  gender: string;
 }
 
 export class UpsertUserTrainData {
@@ -33,6 +35,7 @@ export class UpsertUserTrainData {
       heightInCentimeters: dto.heightInCentimeters,
       age: dto.age,
       bodyFatPercentage: dto.bodyFatPercentage,
+      gender: dto.gender,
     });
 
     await this.userRepository.save(user);
@@ -44,6 +47,7 @@ export class UpsertUserTrainData {
       heightInCentimeters: user.heightInCentimeters!,
       age: user.age!,
       bodyFatPercentage: user.bodyFatPercentage!,
+      gender: user.gender!,
     };
   }
 }
