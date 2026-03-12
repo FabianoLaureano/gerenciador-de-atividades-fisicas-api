@@ -11,16 +11,18 @@ export class WorkoutPlanController {
     request: FastifyRequest<{ Body: CreateWorkoutPlanBody }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
+    /*const session = await auth.api.getSession({
       headers: fromNodeHeaders(request.headers),
     });
 
     if (!session) {
       throw new UnauthorizedError();
-    }
+    }*/
+
+    const userId = request.userId;
 
     const result = await makeCreateWorkoutPlan().execute({
-      userId: session.user.id,
+      userId: userId,
       name: request.body.name,
       workoutDays: request.body.workoutDays,
     });
@@ -32,16 +34,10 @@ export class WorkoutPlanController {
     request: FastifyRequest<{ Querystring: { active?: boolean } }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeListWorkoutPlans().execute({
-      userId: session.user.id,
+      userId: userId,
       active: request.query.active,
     });
 

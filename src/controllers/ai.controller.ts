@@ -20,15 +20,7 @@ import { WeekDaySchema } from "../models/workout-day.model.js";
 
 export class AiController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
-
-    const userId = session.user.id;
+    const userId = request.userId;
     const { messages } = request.body as { messages: UIMessage[] };
 
     const result = streamText({

@@ -3,6 +3,7 @@ import { z } from "zod";
 const userPropsSchema = z.object({
   id: z.string(),
   name: z.string().trim().min(1),
+  email: z.email(),
   weightInGrams: z.number().int().positive().nullable(),
   heightInCentimeters: z.number().int().positive().nullable(),
   age: z.number().int().positive().nullable(),
@@ -19,6 +20,34 @@ export class User {
     this.data = userPropsSchema.parse(data);
   }
 
+  static create(
+    data: Omit<
+      UserProps,
+      | "id"
+      | "weightInGrams"
+      | "heightInCentimeters"
+      | "age"
+      | "bodyFatPercentage"
+      | "gender"
+    > & {
+      weightInGrams?: number | null;
+      heightInCentimeters?: number | null;
+      age?: number | null;
+      bodyFatPercentage?: number | null;
+      gender?: string | null;
+    },
+  ): User {
+    return new User({
+      ...data,
+      id: crypto.randomUUID(),
+      weightInGrams: data.weightInGrams ?? null,
+      heightInCentimeters: data.heightInCentimeters ?? null,
+      age: data.age ?? null,
+      bodyFatPercentage: data.bodyFatPercentage ?? null,
+      gender: data.gender ?? null,
+    });
+  }
+
   static restore(data: UserProps): User {
     return new User(data);
   }
@@ -28,6 +57,9 @@ export class User {
   }
   get name() {
     return this.data.name;
+  }
+  get email() {
+    return this.data.email;
   }
   get weightInGrams() {
     return this.data.weightInGrams;
@@ -41,7 +73,6 @@ export class User {
   get bodyFatPercentage() {
     return this.data.bodyFatPercentage;
   }
-
   get gender() {
     return this.data.gender;
   }

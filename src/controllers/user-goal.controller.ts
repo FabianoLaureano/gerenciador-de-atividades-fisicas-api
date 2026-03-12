@@ -16,13 +16,10 @@ export class UserGoalController {
     request: FastifyRequest<{ Body: CreateUserGoalBody }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-    if (!session) throw new UnauthorizedError();
+    const userId = request.userId;
 
     const result = await makeCreateUserGoal().execute({
-      userId: session.user.id,
+      userId: userId,
       ...request.body,
     });
 
@@ -30,13 +27,10 @@ export class UserGoalController {
   }
 
   async list(request: FastifyRequest, reply: FastifyReply) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-    if (!session) throw new UnauthorizedError();
+    const userId = request.userId;
 
     const result = await makeGetUserGoals().execute({
-      userId: session.user.id,
+      userId: userId,
     });
 
     return reply.status(200).send(result);
@@ -49,13 +43,10 @@ export class UserGoalController {
     }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-    if (!session) throw new UnauthorizedError();
+    const userId = request.userId;
 
     const result = await makeUpdateGoalProgress().execute({
-      userId: session.user.id,
+      userId: userId,
       goalId: request.params.id,
       currentValue: request.body.currentValue,
     });
@@ -67,13 +58,10 @@ export class UserGoalController {
     request: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-    if (!session) throw new UnauthorizedError();
+    const userId = request.userId;
 
     const result = await makeCompleteUserGoal().execute({
-      userId: session.user.id,
+      userId: userId,
       goalId: request.params.id,
     });
 

@@ -10,18 +10,12 @@ export class StartWorkoutSessionController {
     request: FastifyRequest<{ Params: StartWorkoutSessionParams }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const startWorkoutSession = makeStartWorkoutSession();
 
     const result = await startWorkoutSession.execute({
-      userId: session.user.id,
+      userId: userId,
       workoutPlanId: request.params.workoutPlanId,
       workoutDayId: request.params.workoutDayId,
     });

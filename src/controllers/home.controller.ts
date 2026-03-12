@@ -10,16 +10,10 @@ export class HomeController {
     request: FastifyRequest<{ Params: getHomeDataParams }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeGetHomeData().execute({
-      userId: session.user.id,
+      userId: userId,
       date: request.params.date,
     });
 

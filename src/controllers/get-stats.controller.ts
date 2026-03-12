@@ -10,16 +10,10 @@ export class GetStatsController {
     request: FastifyRequest<{ Querystring: StatsQuery }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeGetStats().execute({
-      userId: session.user.id,
+      userId: userId,
       from: request.query.from,
       to: request.query.to,
     });

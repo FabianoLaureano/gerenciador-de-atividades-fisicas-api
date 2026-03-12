@@ -11,16 +11,10 @@ export class TrainingLogController {
     request: FastifyRequest<{ Body: CreateTrainingLogBody }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeCreateTrainingLog().execute({
-      userId: session.user.id,
+      userId: userId,
       name: request.body.name,
       description: request.body.description,
     });
@@ -29,16 +23,10 @@ export class TrainingLogController {
   }
 
   async list(request: FastifyRequest, reply: FastifyReply) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeGetTrainingLogs().execute({
-      userId: session.user.id,
+      userId: userId,
     });
 
     return reply.status(200).send(result);

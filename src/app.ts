@@ -19,6 +19,8 @@ import { meRoutes } from "./routes/me.routes.js";
 import { env } from "./env/index.js";
 import { trainingLogRoutes } from "./routes/training-logs.routes.js";
 import { userGoalRoutes } from "./routes/user-goals.routes.js";
+import { authRoutes } from "./routes/auth.routes.js";
+import { jwtMiddleware } from "./lib/jwt-middleware.js";
 
 const envToLogger = {
   dev: {
@@ -41,6 +43,16 @@ const app = Fastify({
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
+const PUBLIC_ROUTES = [
+  "/api/auth",
+  "/auth/register",
+  "/auth/login",
+  "/health",
+  "/docs",
+  "/swagger.json",
+  "/",
+];
+
 await app.register(fastifySwagger, {
   openapi: {
     info: {
@@ -54,8 +66,27 @@ await app.register(fastifySwagger, {
         url: "http://localhost:3333",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
   },
-  transform: jsonSchemaTransform,
+  transform: (data) => {
+    const transformed = jsonSchemaTransform(data);
+
+    const isPublic = PUBLIC_ROUTES.some((route) => data.url.startsWith(route));
+
+    if (!isPublic && transformed.schema) {
+      (transformed.schema as any).security = [{ bearerAuth: [] }];
+    }
+
+    return transformed;
+  },
 });
 
 await app.register(fastifyCors, {
@@ -86,6 +117,22 @@ if (env.NODE_ENV !== "prod") {
   });
 }
 
+app.addHook("onRequest", async (request, reply) => {
+  // Pega apenas o caminho (path), removendo query strings se houver
+  const urlPath = request.url.split("?")[0];
+
+  // Verifica se a rota é exatamente uma das públicas
+  // OU se é a raiz EXATA "/" (evita que /me/ seja pública)
+  const isPublic =
+    PUBLIC_ROUTES.some(
+      (route) => urlPath === route || urlPath === `${route}/`,
+    ) || urlPath === "/";
+
+  if (!isPublic) {
+    await jwtMiddleware(request, reply);
+  }
+});
+
 await app.register(workoutPlanRoutes, { prefix: "/workout-plans" });
 await app.register(homeRoutes, { prefix: "/home" });
 await app.register(statsRoutes, { prefix: "/stats" });
@@ -93,6 +140,7 @@ await app.register(aiRoutes, { prefix: "/ai" });
 await app.register(meRoutes, { prefix: "/me" });
 await app.register(trainingLogRoutes, { prefix: "/training-logs" });
 await app.register(userGoalRoutes, { prefix: "/user-goals" });
+await app.register(authRoutes, { prefix: "/auth" });
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: "GET",

@@ -10,16 +10,10 @@ export class GetWorkoutPlanController {
     request: FastifyRequest<{ Params: getWorkoutPlanParams }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const workoutPlan = await makeGetWorkoutPlan().execute({
-      userId: session.user.id,
+      userId: userId,
       workoutPlanId: request.params.workoutPlanId,
     });
 

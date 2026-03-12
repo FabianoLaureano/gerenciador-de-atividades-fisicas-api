@@ -1,4 +1,3 @@
-// src/controllers/me.controller.ts
 import { FastifyRequest, FastifyReply } from "fastify";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
@@ -9,16 +8,10 @@ import { UpsertUserTrainDataBody } from "../schemas/me.schema.js";
 
 export class MeController {
   async get(request: FastifyRequest, reply: FastifyReply) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const result = await makeGetUserTrainData().execute({
-      userId: session.user.id,
+      userId: userId,
     });
 
     return reply.status(200).send(result);
@@ -28,16 +21,10 @@ export class MeController {
     request: FastifyRequest<{ Body: UpsertUserTrainDataBody }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = (request as any).userId;
 
     const result = await makeUpsertUserTrainData().execute({
-      userId: session.user.id,
+      userId: userId,
       weightInGrams: request.body.weightInGrams,
       heightInCentimeters: request.body.heightInCentimeters,
       age: request.body.age,

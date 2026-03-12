@@ -16,18 +16,12 @@ export class UpdateWorkoutSessionController {
     }>,
     reply: FastifyReply,
   ) {
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(request.headers),
-    });
-
-    if (!session) {
-      throw new UnauthorizedError();
-    }
+    const userId = request.userId;
 
     const updateWorkoutSession = makeUpdateWorkoutSession();
 
     const result = await updateWorkoutSession.execute({
-      userId: session.user.id,
+      userId: userId,
       workoutPlanId: request.params.workoutPlanId,
       workoutDayId: request.params.workoutDayId,
       sessionId: request.params.sessionId,
