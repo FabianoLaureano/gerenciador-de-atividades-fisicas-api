@@ -5,25 +5,17 @@ import { prisma } from "../lib/db.js";
 import { env } from "../env/index.js";
 
 export const auth = betterAuth({
-  baseURL: env.BETTER_AUTH_URL,
-  advanced: {
-    crossSubDomainCookies: {
-      enabled: true,
-      domain: ".vercel.app",
-    },
-    cookies: {
-      session_token: {
-        attributes: {
-          sameSite: "none",
-          secure: true,
-        },
-      },
-    },
-  },
+  baseURL: "https://gerenciador-de-atividades-fisicas-f.vercel.app",
   trustedOrigins: [
     "http://localhost:3000",
     "https://gerenciador-de-atividades-fisicas-f.vercel.app",
   ],
+  advanced: {
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: env.NODE_ENV === "prod" ? ".vercel.app" : undefined,
+    },
+  },
   emailAndPassword: {
     enabled: true,
   },
