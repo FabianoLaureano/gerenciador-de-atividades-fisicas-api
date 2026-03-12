@@ -21,6 +21,8 @@ import { trainingLogRoutes } from "./routes/training-logs.routes.js";
 import { userGoalRoutes } from "./routes/user-goals.routes.js";
 import { authRoutes } from "./routes/auth.routes.js";
 import { jwtMiddleware } from "./lib/jwt-middleware.js";
+import fastifyStatic from "@fastify/static";
+import path from "path";
 
 const envToLogger = {
   dev: {
@@ -45,6 +47,17 @@ app.setSerializerCompiler(serializerCompiler);
 
 const PUBLIC_ROUTES = [
   "/api/auth",
+  "/auth/register",
+  "/auth/login",
+  "/health",
+  "/docs",
+  "/swagger.json",
+  "/public/*",
+  "/",
+];
+
+const PREFIX_PUBLIC_ROUTES = ["/api/auth", "/public"];
+const EXACT_PUBLIC_ROUTES = [
   "/auth/register",
   "/auth/login",
   "/health",
@@ -89,6 +102,11 @@ await app.register(fastifySwagger, {
   },
 });
 
+await app.register(fastifyStatic, {
+  root: path.join(process.cwd(), "public"),
+  prefix: "/public/",
+});
+
 await app.register(fastifyCors, {
   origin: [
     "http://localhost:3000",
@@ -124,9 +142,9 @@ app.addHook("onRequest", async (request, reply) => {
   // Verifica se a rota é exatamente uma das públicas
   // OU se é a raiz EXATA "/" (evita que /me/ seja pública)
   const isPublic =
-    PUBLIC_ROUTES.some(
-      (route) => urlPath === route || urlPath === `${route}/`,
-    ) || urlPath === "/";
+    PREFIX_PUBLIC_ROUTES.some((route) => urlPath.startsWith(route)) ||
+    EXACT_PUBLIC_ROUTES.includes(urlPath) ||
+    EXACT_PUBLIC_ROUTES.includes(`${urlPath}/`);
 
   if (!isPublic) {
     await jwtMiddleware(request, reply);

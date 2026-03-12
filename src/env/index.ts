@@ -9,6 +9,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_SECRET: z.string(),
   BETTER_AUTH_URL: z.string().default("http://localhost:3333"),
   JWT_SECRET: z.string(),
+  BACKEND_URL: z.string(),
 });
 
 export const _env = envSchema.safeParse(process.env); // tenta validar para ver se tem as informações acima
