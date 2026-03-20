@@ -5,6 +5,7 @@ const trainingLogPropsSchema = z.object({
   userId: z.string(),
   name: z.string().trim().min(1),
   description: z.string().optional(),
+  type: z.string().default("outro"),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -45,6 +46,9 @@ export class TrainingLog {
   }
   get description() {
     return this.data.description;
+  }
+  get type() {
+    return this.data.type;
   }
   get createdAt() {
     return this.data.createdAt;

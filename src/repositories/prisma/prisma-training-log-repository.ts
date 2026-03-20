@@ -10,6 +10,7 @@ export class PrismaTrainingLogRepository implements ITrainingLogRepository {
         userId: trainingLog.userId,
         name: trainingLog.name,
         description: trainingLog.description,
+        type: trainingLog.type,
         createdAt: trainingLog.createdAt,
         updatedAt: trainingLog.updatedAt,
       },

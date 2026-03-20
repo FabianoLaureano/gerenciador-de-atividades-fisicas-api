@@ -6,6 +6,7 @@ interface InputDto {
   userId: string;
   name?: string;
   description?: string;
+  type?: string;
 }
 
 interface OutputDto {
@@ -13,6 +14,7 @@ interface OutputDto {
   userId: string;
   name: string;
   description?: string;
+  type: string;
   createdAt: Date;
 }
 
@@ -28,6 +30,7 @@ export class CreateTrainingLog {
       userId: dto.userId,
       name,
       description: dto.description,
+      type: dto.type ?? "outro",
     });
 
     await this.repository.create(trainingLog);
@@ -35,8 +38,9 @@ export class CreateTrainingLog {
     return {
       id: trainingLog.id,
       userId: trainingLog.userId,
-      name: name,
+      name,
       description: trainingLog.description,
+      type: trainingLog.type,
       createdAt: trainingLog.createdAt,
     };
   }

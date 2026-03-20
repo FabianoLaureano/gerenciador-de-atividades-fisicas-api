@@ -3,12 +3,14 @@ import { z } from "zod";
 export const CreateTrainingLogBodySchema = z.object({
   name: z.string().optional(),
   description: z.string().optional(),
+  type: z.string().optional(),
 });
 
 export const TrainingLogResponseSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   description: z.string().optional(),
+  type: z.string(),
   createdAt: z.date(),
 });
 

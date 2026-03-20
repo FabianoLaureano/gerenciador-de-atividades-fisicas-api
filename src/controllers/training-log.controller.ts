@@ -17,6 +17,7 @@ export class TrainingLogController {
       userId: userId,
       name: request.body.name,
       description: request.body.description,
+      type: request.body.type,
     });
 
     return reply.status(201).send(result);

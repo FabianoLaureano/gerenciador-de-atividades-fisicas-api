@@ -8,6 +8,7 @@ interface OutputDto {
   id: string;
   name: string;
   description?: string;
+  type: string;
   createdAt: Date;
 }
 
@@ -21,6 +22,7 @@ export class GetTrainingLogs {
       id: log.id,
       name: log.name,
       description: log.description,
+      type: log.type,
       createdAt: log.createdAt,
     }));
   }
